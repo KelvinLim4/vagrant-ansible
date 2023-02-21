@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks: 
+    - name: 'Instala o PHP'
+      apt:
+        name: php
+        state: latest
+      become: yes
+    - name: 'Instala o Apache'
+      apt: 
+        name: apache2
+        state: latest
+      become: yes
+    
