@@ -3,10 +3,16 @@
   tasks: 
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
-        name: ['php', 'apache2', 'mysql-server', 'libapache2-mod-php', 'php-mysql', 'php-gd', 'php-mbstring', 'php-xml']  
+        name: ['php', 'apache2', 'mysql-server', 'libapache2-mod-php', 'php-mysql', 'php-gd', 'php-mbstring', 'php-xml', 'python3']  
         state: latest
       become: yes
         
+    - name: 'Cria o banco MySQL'
+      mysql_db:
+        name: wordpress_db
+        login_user: root
+        login_password: root
+        state: present
 
 
     
