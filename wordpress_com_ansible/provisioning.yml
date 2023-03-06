@@ -3,18 +3,10 @@
   tasks: 
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
-        name: "{{ item }}"
+        name: ['php', 'apache2', 'mysql-server', 'libapache2-mod-php', 'php-mysql', 'php-gd', 'php-mbstring', 'php-xml']  
         state: latest
       become: yes
-      with_items:
-        - php
-        - apache2
-        - mysql-server
-        - libapache2-mod-php
-        - php-mysql
-        - php-gd
-        - php-mbstring
-        - php-xml
+        
 
 
     
