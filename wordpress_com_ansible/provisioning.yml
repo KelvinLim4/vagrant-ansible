@@ -1,6 +1,32 @@
 ---
 - hosts: all
   tasks: 
+    - name: 'Atualiza o SO'
+      shell: sudo apt update -y && sudo apt upgrade -y
+      become: yes
+
+    - name: 'Instala o pip'
+      shell: sudo apt install pip -y
+      become: yes
+
+    - name: 'Instala o pymsql'
+      shell: sudo pip install pymysql
+      become: yes
+
+    - name: 'Instala pacotes de dependencia do sistema operacional'
+      apt: 
+        name: ['php', 'apache2', 'mysql-server', 'libapache2-mod-php', 'php-mysql', 'php-gd', 'php-mbstring', 'php-xml', 'python3']  
+        state: latest
+      become: yes
+
+    - name: Muda a senha do usuário root no MySQL
+      mysql_user:
+        name: root
+        host: localhost
+        password: root
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      become: true
+
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
         name: ['php', 'apache2', 'mysql-server', 'libapache2-mod-php', 'php-mysql', 'php-gd', 'php-mbstring', 'php-xml', 'python3']  
@@ -13,6 +39,7 @@
         login_user: root
         login_password: root
         state: present
+
 
 
     
