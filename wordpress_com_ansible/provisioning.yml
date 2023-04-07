@@ -19,13 +19,13 @@
         state: latest
       become: yes
 
-    - name: Muda a senha do usuário root no MySQL
-      mysql_user:
-        name: root
-        host: localhost
-        password: root
-        login_unix_socket: /var/run/mysqld/mysqld.sock
-      become: true
+ #/   - name: Muda a senha do usuário root no MySQL
+#/      mysql_user:
+#/        name: root
+#/        host: localhost
+#/        password: root
+#/        login_unix_socket: /var/run/mysqld/mysqld.sock
+#/      become: true
 
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
@@ -40,6 +40,13 @@
         login_password: root
         state: present
 
-
-
+    - name: Cria usuário do MySQL
+      community.mysql.mysql_user:
+        login_user: root
+        login_password: root
+        name: wordpress_user
+        password: 12345
+        priv: 'wordpress_db.*:ALL'
+        state: present
+      become: yes
     
