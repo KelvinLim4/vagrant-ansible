@@ -1,5 +1,12 @@
 ---
 - hosts: all
+  handlers:
+    - name: restart apache
+      service: 
+        name: apache2
+        state: restarted
+      become: yes
+
   tasks: 
     - name: 'Atualiza o SO'
       shell: sudo apt update -y && sudo apt upgrade -y
@@ -76,6 +83,14 @@
         replace: '{{ item.value }}'
       with_items:
         - { regex: 'database_name_here', value: 'wordpress_db'}
-        - { regex: 'username_here', value: 'wordpress_use'}
-        - { regex: 'password_here', value: 'root'}
+        - { regex: 'username_here', value: 'wordpress_user'}
+        - { regex: 'password_here', value: '12345'}
       become: yes
+
+    - name: Configurando o apache para servir ao wordpress
+      copy:
+        src: 'files/000-default.conf'
+        dest: '/etc/apache2/sites-available/000-default.conf'
+      become: yes
+      notify:
+        - restart apache
