@@ -22,7 +22,7 @@
 
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
-        name: ['mysql-server', 'php-mysql']  
+        name: ['php','php-gd','mysql-server', 'php-mysql','php-mbstring', 'php-xml']  
         state: latest
       become: yes
 
@@ -77,7 +77,7 @@
 
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt: 
-        name: ['php', 'apache2', 'libapache2-mod-php', 'php-gd', 'php-mbstring', 'php-xml', 'python3']  
+        name: ['php', 'apache2', 'libapache2-mod-php', 'php-gd', 'php-mbstring', 'php-xml' ,'python3', 'php-mysql']  
         state: latest
       become: yes
     
