@@ -1,5 +1,9 @@
 ---
 - hosts: database
+  vars_files:
+      - vars/database.yml
+      - vars/vars.yml
+
   handlers:
     - name: restart mysql
       service:
@@ -36,7 +40,7 @@
 
     - name: 'Cria o banco MySQL'
       mysql_db:
-        name: wordpress_db
+        name: "{{ wp_db_name }}"
         login_user: root
         login_password: root
         state: present
@@ -45,15 +49,15 @@
       community.mysql.mysql_user:
         login_user: root
         login_password: root
-        name: wordpress_user
-        password: 12345
-        priv: 'wordpress_db.*:ALL'
+        name: "{{ wp_username }}"
+        password: "{{ wp_user_password }}"
+        priv: "{{ wp_db_name }}.*:ALL"
         state: present
         host: "{{ item }}"
       with_items:
       - 'localhost'
       - '127.0.0.1'
-      - '192.168.56.250'
+      - "{{ wp_host_ip }}"
     - name: Configura mysql para aceitar conexões remotas
       copy:
         src: 'files/my.cnf'
@@ -63,6 +67,10 @@
         - restart mysql
 
 - hosts: wordpress
+  vars_files:
+    - vars/wordpress.yml
+    - vars/vars.yml
+
   handlers:
     - name: restart apache
       service: 
@@ -95,21 +103,21 @@
             
     - name: editando nome do arquivo
       copy:
-        src: /var/www/wordpress/wp-config-sample.php
-        dest: /var/www/wordpress/wp-config.php
+        src: "{{ wp_installation_dir }}/wp-config-sample.php"
+        dest: "{{ wp_installation_dir }}/wp-config.php"
         remote_src: yes
       become: yes
           
     - name: Configura o wp-config com as entradas do banco de dados
       replace:
-        path: /var/www/wordpress/wp-config.php
+        path: "{{ wp_installation_dir }}/wp-config.php"
         regexp: '{{ item.regex }}'
         replace: '{{ item.value }}'
       with_items:
-        - { regex: 'database_name_here', value: 'wordpress_db'}
-        - { regex: 'username_here', value: 'wordpress_user'}
-        - { regex: 'password_here', value: '12345'}
-        - { regex: 'localhost', value: '192.168.56.249'}
+        - { regex: 'database_name_here', value: "{{ wp_db_name }}"}
+        - { regex: 'username_here', value: "{{ wp_username }}"}
+        - { regex: 'password_here', value: "{{ wp_user_password }}"}
+        - { regex: 'localhost', value: "{{ wp_db_ip }}"}
       become: yes
 
     - name: Configurando o apache para servir ao wordpress
