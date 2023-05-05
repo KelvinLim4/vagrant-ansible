@@ -30,41 +30,40 @@
         state: latest
       become: yes
 
-    - name: Muda a senha do usuário root no MySQL
-      mysql_user:
-        name: root
-        host: localhost
-        password: root
-        login_unix_socket: /var/run/mysqld/mysqld.sock
-      become: true
+#    - name: Muda a senha do usuário root no MySQL
+ #     mysql_user:
+  #     host: localhost
+   #     password: root
+    #    login_unix_socket: /var/run/mysqld/mysqld.sock
+     # become: true
 
-    - name: 'Cria o banco MySQL'
-      mysql_db:
-        name: "{{ wp_db_name }}"
-        login_user: root
-        login_password: root
-        state: present
+#    - name: 'Cria o banco MySQL'
+ #     mysql_db:
+  #      name: "{{ wp_db_name }}"
+   #     login_user: root
+    #    login_password: root
+     #   state: present
 
-    - name: Cria usuário do MySQL
-      community.mysql.mysql_user:
-        login_user: root
-        login_password: root
-        name: "{{ wp_username }}"
-        password: "{{ wp_user_password }}"
-        priv: "{{ wp_db_name }}.*:ALL"
-        state: present
-        host: "{{ item }}"
-      with_items:
-      - 'localhost'
-      - '127.0.0.1'
-      - "{{ wp_host_ip }}"
-    - name: Configura mysql para aceitar conexões remotas
-      copy:
-        src: 'files/my.cnf'
-        dest: '/etc/mysql/mysql.conf.d/mysqld.cnf'
-      become: yes
-      notify:
-        - restart mysql
+   # - name: Cria usuário do MySQL
+    #  community.mysql.mysql_user:
+     #   login_user: root
+      #  login_password: root
+       # name: "{{ wp_username }}"
+        #password: "{{ wp_user_password }}"
+        #priv: "{{ wp_db_name }}.*:ALL"
+        #state: present
+        #host: "{{ item }}"
+      #with_items:
+      #- 'localhost'
+      #- '127.0.0.1'
+      #- "{{ wp_host_ip }}"
+    #- name: Configura mysql para aceitar conexões remotas
+     # copy:
+      #  src: 'files/my.cnf'
+       # dest: '/etc/mysql/mysql.conf.d/mysqld.cnf'
+      #become: yes
+      #notify:
+       # - restart mysql
 
 - hosts: wordpress
   vars_files:
@@ -121,9 +120,17 @@
       become: yes
 
     - name: Configurando o apache para servir ao wordpress
-      copy:
-        src: 'files/000-default.conf'
+      template:
+        src: 'templates/000-default.conf.j2'
         dest: '/etc/apache2/sites-available/000-default.conf'
       become: yes
       notify:
         - restart apache
+
+ #   - name: Configurando o apache para servir ao wordpress
+  #    copy:
+   #     src: 'files/000-default.conf'
+    #    dest: '/etc/apache2/sites-available/000-default.conf'
+     # become: yes
+      #notify:
+       # - restart apache
