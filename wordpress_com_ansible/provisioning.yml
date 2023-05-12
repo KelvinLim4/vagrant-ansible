@@ -4,6 +4,7 @@
   vars_files:
       - vars/database.yml
       - vars/vars.yml
+      - roles/mysql/defaults/main.yml
 
   roles: 
     - mysql
