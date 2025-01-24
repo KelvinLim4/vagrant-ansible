@@ -1,0 +1,4 @@
+---
+wp_version: 'https://wordpress.org/latest.tar.gz'
+wp_dir: '/srv/www/wordpress'
+db_ip: '192.168.56.249'
